@@ -31,6 +31,15 @@ export default Base =>
 
       // Determine Header Groups
       let hasHeaderGroups = false
+
+      columns.push({
+        Header: '',
+        id: '@@dummy',
+        sortable: false,
+        resizable: false,
+        filterable: false
+      });
+
       columns.forEach(column => {
         if (column.columns) {
           hasHeaderGroups = true

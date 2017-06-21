@@ -4,30 +4,21 @@ $expandSize = 7px
 
 .ReactTable
   position:relative
-  display: flex
-  flex-direction: column
   border: 1px solid alpha(black, .1)
-  *
-    box-sizing: border-box
+
+  .rt-table-wrapper
+    overflow-y: hidden
+    overflow-x: auto
+
   .rt-table
-    flex: 1
-    display: flex
-    flex-direction: column
-    align-items: stretch
     width: 100%
-    border-collapse: collapse
-    overflow: auto
+    table-layout: fixed
+    overflow: hidden
+
+  .rt-colgroup-col
+    width: 100%
 
   .rt-thead
-    flex: 1 0 auto
-    display: flex
-    // overflow-y: scroll
-    flex-direction: column
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-
     &.-headerGroups
       background: alpha(black, .03)
       border-bottom: 1px solid alpha(black, .05)
@@ -41,17 +32,20 @@ $expandSize = 7px
     &.-header
       box-shadow: 0 2px 15px 0px alpha(black, .15)
 
-    .rt-tr
-      text-align:center
-
     .rt-th
     .rt-td
+      font-weight: normal
+      text-align: center
       padding: 5px 5px
       line-height: normal
       position: relative
       border-right: 1px solid alpha(black, .05)
       transition box-shadow .3s $easeOutBack
       box-shadow:inset 0 0 0 0 transparent
+      -webkit-user-select: none
+      -moz-user-select: none
+      -ms-user-select: none
+      user-select: none
       &.-sort-asc
         box-shadow:inset 0 3px 0 0 alpha(black, .6)
       &.-sort-desc
@@ -96,13 +90,8 @@ $expandSize = 7px
       margin-top: -10px
 
   .rt-tbody
-    flex: 99999 1 auto
-    display: flex
-    flex-direction: column
-    overflow: auto
-    // z-index:0
-    .rt-tr-group
-      border-bottom: solid 1px alpha(black, .05)
+    .rt-tr
+      border-bottom: 1px solid rgba(0,0,0,.05)
       &:last-child
         border-bottom: 0
     .rt-td
@@ -111,17 +100,8 @@ $expandSize = 7px
         border-right:0
     .rt-expandable
       cursor: pointer
-  .rt-tr-group
-    flex: 1 0 auto
-    display: flex
-    flex-direction: column
-    align-items: stretch
-  .rt-tr
-    flex: 1 0 auto
-    display: inline-flex
   .rt-th
   .rt-td
-    flex: 1 0 0px
     white-space: nowrap
     text-overflow: ellipsis
     padding: 7px 5px
@@ -169,14 +149,18 @@ $expandSize = 7px
     z-index: 10
 
   .rt-tfoot
-    display: flex
-    flex-direction: column
     box-shadow: 0 0px 15px 0px alpha(black, .15)
 
     .rt-td
       border-right:1px solid alpha(black, .05)
       &:last-child
         border-right:0
+
+  .rt-tr
+  .rt-th
+  .rt-colgroup-col
+    &.-dummy
+      width: initial !important
 
   &.-striped
     .rt-tr.-odd
@@ -187,12 +171,8 @@ $expandSize = 7px
         background: alpha(black, .05)
 
   .-pagination
-    z-index: 1
-    display:flex
-    justify-content: space-between
-    align-items: stretch
-    flex-wrap: wrap
-    padding: 3px
+    display: table
+    width: 100%
     box-shadow: 0 0px 15px 0px alpha(black, .1)
     border-top: 2px solid alpha(black, .1)
 
@@ -221,18 +201,18 @@ $expandSize = 7px
 
     .-previous
     .-next
-      flex: 1
+      display: table-cell
+      width: 25%
+      height: 100%
+      padding: 3px
       text-align: center
+      vertical-align: middle
 
     .-center
-      flex: 1.5
-      text-align:center
-      margin-bottom:0
-      display: flex
-      flex-direction: row
-      flex-wrap: wrap
-      align-items: center
-      justify-content: space-around
+      display: table-cell
+      text-align: center
+      margin-bottom: 0
+      vertical-align: middle
 
     .-pageInfo
       display: inline-block
@@ -262,9 +242,8 @@ $expandSize = 7px
     color: alpha(black, .5)
 
   .-loading
-    display:block
     position:absolute
-    left:0
+    left:-999999px
     right:0
     top:0
     bottom:0
@@ -276,7 +255,6 @@ $expandSize = 7px
 
     > div
       position:absolute
-      display: block
       text-align:center
       width:100%
       top:50%
@@ -287,6 +265,7 @@ $expandSize = 7px
       transition: all .3s $easeOutQuad
 
     &.-active
+      display:block
       opacity: 1
       pointer-events: all
       > div

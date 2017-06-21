@@ -92,6 +92,7 @@ export default {
   // Component decorators
   getProps: emptyObj,
   getTableProps: emptyObj,
+  getColGroupColProps: emptyObj,
   getTheadGroupProps: emptyObj,
   getTheadGroupTrProps: emptyObj,
   getTheadGroupThProps: emptyObj,
@@ -102,7 +103,6 @@ export default {
   getTheadFilterTrProps: emptyObj,
   getTheadFilterThProps: emptyObj,
   getTbodyProps: emptyObj,
-  getTrGroupProps: emptyObj,
   getTrProps: emptyObj,
   getTdProps: emptyObj,
   getTfootProps: emptyObj,
@@ -129,13 +129,17 @@ export default {
     resizable: undefined, // use table default
     filterable: undefined, // use table default
     show: true,
-    minWidth: 100,
+    minWidth: undefined,
     // Cells only
     className: '',
     style: {},
     getProps: emptyObj,
     // Pivot only
     aggregate: undefined,
+    // ColGroupCol only
+    colGroupColClassName: '',
+    colGroupColStyle: {},
+    getColGroupColProps: emptyObj,
     // Headers only
     headerClassName: '',
     headerStyle: {},
@@ -170,14 +174,13 @@ export default {
   rowsText: 'rows',
 
   // Components
-  TableComponent: _.makeTemplateComponent('rt-table'),
-  TheadComponent: _.makeTemplateComponent('rt-thead'),
-  TbodyComponent: _.makeTemplateComponent('rt-tbody'),
-  TrGroupComponent: _.makeTemplateComponent('rt-tr-group'),
-  TrComponent: _.makeTemplateComponent('rt-tr'),
+  TableComponent: _.makeTemplateComponent('rt-table', 'table'),
+  TheadComponent: _.makeTemplateComponent('rt-thead', 'thead'),
+  TbodyComponent: _.makeTemplateComponent('rt-tbody', 'tbody'),
+  TrComponent: _.makeTemplateComponent('rt-tr', 'tr'),
   ThComponent: ({ toggleSort, className, children, ...rest }) => {
     return (
-      <div
+      <th
         className={classnames(className, 'rt-th')}
         onClick={e => {
           toggleSort && toggleSort(e)
@@ -185,11 +188,11 @@ export default {
         {...rest}
       >
         {children}
-      </div>
+      </th>
     )
   },
-  TdComponent: _.makeTemplateComponent('rt-td'),
-  TfootComponent: _.makeTemplateComponent('rt-tfoot'),
+  TdComponent: _.makeTemplateComponent('rt-td', 'td'),
+  TfootComponent: _.makeTemplateComponent('rt-tfoot', 'tfoot'),
   FilterComponent: ({ filter, onChange }) =>
     <input
       type='text'
