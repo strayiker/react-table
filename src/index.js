@@ -228,8 +228,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           className={classnames('rt-colgroup-col', classes, { '-dummy': isLast })}
           style={{
             ...styles,
-            width: !!width ? `${width}px` : undefined,
-            maxWidth: !!maxWidth ? `${maxWidth}px` : undefined
+            width: width,
+            maxWidth: maxWidth
           }}
         />
       )
