@@ -11,7 +11,7 @@ export const ReactTableDefaults = defaultProps
 export default class ReactTable extends Methods(Lifecycle(Component)) {
   static defaultProps = defaultProps
 
-  constructor(props) {
+  constructor (props) {
     super()
 
     this.getResolvedState = this.getResolvedState.bind(this)
@@ -39,11 +39,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       filtered: props.defaultFiltered,
       resized: props.defaultResized,
       currentlyResizing: false,
-      skipNextSort: false
+      skipNextSort: false,
     }
   }
 
-  render() {
+  render () {
     const resolvedState = this.getResolvedState()
     const {
       children,
@@ -125,7 +125,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       hasHeaderGroups,
       // Sorted Data
       sortedData,
-      currentlyResizing
+      currentlyResizing,
     } = resolvedState
 
     // Pagination
@@ -144,7 +144,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           index++
           const rowWithViewIndex = {
             ...row,
-            _viewIndex: index
+            _viewIndex: index,
           }
           const newPath = path.concat([i])
           if (rowWithViewIndex[subRowsKey] && _.get(expanded, newPath)) {
@@ -156,7 +156,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           }
           return rowWithViewIndex
         }),
-        index
+        index,
       ]
     }
     ;[pageRows] = recurseRowsViewIndex(pageRows)
@@ -175,7 +175,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       padRows,
       hasColumnFooter,
       canPrevious,
-      canNext
+      canNext,
     }
 
     // Visual Components
@@ -201,23 +201,23 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const classes = [
         column.colGroupColClassName,
         colgroupColProps.className,
-        columnColgroupColProps.className
+        columnColgroupColProps.className,
       ]
 
       const styles = {
         ...column.colGroupColStyle,
         ...colgroupColProps.style,
-        ...columnColgroupColProps.style
+        ...columnColgroupColProps.style,
       }
       const width = _.getFirstDefined(
         resizedCol.value,
         column.width,
-        column.minWidth
+        column.minWidth,
       )
       const maxWidth = _.getFirstDefined(
         resizedCol.value,
         column.width,
-        column.maxWidth
+        column.maxWidth,
       )
 
       const isLast = i === allVisibleColumns.length - 1
@@ -229,7 +229,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{
             ...styles,
             width: width,
-            maxWidth: maxWidth
+            maxWidth: maxWidth,
           }}
         />
       )
@@ -270,13 +270,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const classes = [
         column.headerClassName,
         theadGroupThProps.className,
-        columnHeaderProps.className
+        columnHeaderProps.className,
       ]
 
       const styles = {
         ...column.headerStyle,
         ...theadGroupThProps.style,
-        ...columnHeaderProps.style
+        ...columnHeaderProps.style,
       }
 
       const colSpan = column.columns.length;
@@ -284,7 +284,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const rest = {
         ...theadGroupThProps.rest,
         ...columnHeaderProps.rest,
-        colSpan
+        colSpan,
       }
 
       const isLast = i === headerGroups.length - 1
@@ -298,7 +298,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         >
           {_.normalizeComponent(column.Header, {
             data: sortedData,
-            column: column
+            column: column,
           })}
         </ThComponent>
       )
@@ -330,9 +330,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
     const makeHeader = (column, i) => {
       const sort = sorted.find(d => d.id === column.id)
-      const show = typeof column.show === 'function'
-        ? column.show()
-        : column.show
+      const show =
+        typeof column.show === 'function' ? column.show() : column.show
       const theadThProps = _.splitProps(
         getTheadThProps(finalState, undefined, column, this)
       )
@@ -343,27 +342,27 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const classes = [
         column.headerClassName,
         theadThProps.className,
-        columnHeaderProps.className
+        columnHeaderProps.className,
       ]
 
       const styles = {
         ...column.headerStyle,
         ...theadThProps.style,
-        ...columnHeaderProps.style
+        ...columnHeaderProps.style,
       }
 
       const rest = {
         ...theadThProps.rest,
-        ...columnHeaderProps.rest
+        ...columnHeaderProps.rest,
       }
 
       const isResizable = _.getFirstDefined(column.resizable, resizable, false)
       const resizer = isResizable
-        ? <ResizerComponent
-            onMouseDown={e => this.resizeColumnStart(column, e, false)}
-            onTouchStart={e => this.resizeColumnStart(column, e, true)}
-            {...resizerProps}
-          />
+        ? (<ResizerComponent
+          onMouseDown={e => this.resizeColumnStart(column, e, false)}
+          onTouchStart={e => this.resizeColumnStart(column, e, true)}
+          {...resizerProps}
+        />)
         : null
 
       const isSortable = _.getFirstDefined(column.sortable, sortable, false)
@@ -390,10 +389,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           }}
           {...rest}
         >
-          <div className="rt-resizable-header-content">
+          <div className='rt-resizable-header-content'>
             {_.normalizeComponent(column.Header, {
               data: sortedData,
-              column: column
+              column: column,
             })}
           </div>
           {resizer}
@@ -436,18 +435,18 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const classes = [
         column.headerClassName,
         theadFilterThProps.className,
-        columnHeaderProps.className
+        columnHeaderProps.className,
       ]
 
       const styles = {
         ...column.headerStyle,
         ...theadFilterThProps.style,
-        ...columnHeaderProps.style
+        ...columnHeaderProps.style,
       }
 
       const rest = {
         ...theadFilterThProps.rest,
-        ...columnHeaderProps.rest
+        ...columnHeaderProps.rest,
       }
 
       const filter = filtered.find(filter => filter.id === column.id)
@@ -469,14 +468,14 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         >
           {isFilterable
             ? _.normalizeComponent(
-                ResolvedFilterComponent,
-                {
-                  column,
-                  filter,
-                  onChange: value => this.filterColumn(column, value)
-                },
-                defaultProps.column.Filter
-              )
+              ResolvedFilterComponent,
+              {
+                column,
+                filter,
+                onChange: value => this.filterColumn(column, value),
+              },
+              defaultProps.column.Filter
+            )
             : null}
         </ThComponent>
       )
@@ -492,7 +491,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         nestingPath: path.concat([i]),
         aggregated: row[aggregatedKey],
         groupedByPivot: row[groupedByPivotKey],
-        subRows: row[subRowsKey]
+        subRows: row[subRowsKey],
       }
       const isExpanded = _.get(expanded, rowInfo.nestingPath)
       const trProps = _.splitProps(
@@ -508,9 +507,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           {...trProps.rest}
         >
           {allVisibleColumns.map((column, i2) => {
-            const show = typeof column.show === 'function'
-              ? column.show()
-              : column.show
+            const show =
+              typeof column.show === 'function' ? column.show() : column.show
             const tdProps = _.splitProps(
               getTdProps(finalState, rowInfo, column, this)
             )
@@ -521,18 +519,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             const classes = [
               tdProps.className,
               column.className,
-              columnProps.className
+              columnProps.className,
             ]
 
             const styles = {
               ...tdProps.style,
               ...column.style,
-              ...columnProps.style
-            }
-
-            const rest = {
-              ...tdProps.rest,
-              ...columnProps.rest
+              ...columnProps.style,
             }
 
             const cellInfo = {
@@ -547,7 +540,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               tdProps,
               columnProps,
               classes,
-              styles
+              styles,
             }
 
             const value = cellInfo.value
@@ -566,7 +559,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
               return this.setStateWithData(
                 {
-                  expanded: newExpanded
+                  expanded: newExpanded,
                 },
                 () => {
                   onExpandedChange &&
@@ -605,7 +598,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               // Make it expandable by defualt
               cellInfo.expandable = true
               interactionProps = {
-                onClick: onExpanderClick
+                onClick: onExpanderClick,
               }
               // If pivoted, has no subRows, and does not have a subComponent, do not make expandable
               if (cellInfo.pivoted) {
@@ -633,7 +626,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   ResolvedPivotComponent,
                   {
                     ...cellInfo,
-                    value: row[pivotValKey]
+                    value: row[pivotValKey],
                   },
                   row[pivotValKey]
                 )
@@ -682,8 +675,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   (isBranch || isPreview) && 'rt-pivot'
                 )}
                 style={styles}
-                {...rest}
                 {...interactionProps}
+                {...tdProps.rest}
+                {...columnProps.rest}
               >
                 {resolvedCell}
               </TdComponent>
@@ -721,9 +715,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makePadColumn = (column, i) => {
-      const show = typeof column.show === 'function'
-        ? column.show()
-        : column.show
+      const show =
+        typeof column.show === 'function' ? column.show() : column.show
       const tdProps = _.splitProps(
         getTdProps(finalState, undefined, column, this)
       )
@@ -734,13 +727,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const classes = [
         tdProps.className,
         column.className,
-        columnProps.className
+        columnProps.className,
       ]
 
       const styles = {
         ...tdProps.style,
         ...column.style,
-        ...columnProps.style
+        ...columnProps.style,
       }
 
       return (
@@ -778,9 +771,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makeColumnFooter = (column, i) => {
-      const show = typeof column.show === 'function'
-        ? column.show()
-        : column.show
+      const show =
+        typeof column.show === 'function' ? column.show() : column.show
       const tFootTdProps = _.splitProps(
         getTfootTdProps(finalState, undefined, undefined, this)
       )
@@ -795,14 +787,14 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         tFootTdProps.className,
         column.className,
         columnProps.className,
-        columnFooterProps.className
+        columnFooterProps.className,
       ]
 
       const styles = {
         ...tFootTdProps.style,
         ...column.style,
         ...columnProps.style,
-        ...columnFooterProps.style
+        ...columnFooterProps.style,
       }
 
       return (
@@ -816,7 +808,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         >
           {_.normalizeComponent(column.Footer, {
             data: sortedData,
-            column: column
+            column: column,
           })}
         </TdComponent>
       )
@@ -861,14 +853,14 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           className={classnames('ReactTable', className, rootProps.className)}
           style={{
             ...style,
-            ...rootProps.style
+            ...rootProps.style,
           }}
           {...rootProps.rest}
         >
           {showPagination && showPaginationTop
-            ? <div className="pagination-top">
-                {pagination}
-              </div>
+            ? <div className='pagination-top'>
+              {pagination}
+            </div>
             : null}
           <div className="rt-table-wrapper">
             <TableComponent
@@ -895,9 +887,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             </TableComponent>
           </div>
           {showPagination && showPaginationBottom
-            ? <div className="pagination-bottom">
-                {pagination}
-              </div>
+            ? <div className='pagination-bottom'>
+              {pagination}
+            </div>
             : null}
           {!pageRows.length &&
             <NoDataComponent {...noDataProps}>

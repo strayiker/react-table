@@ -150,6 +150,7 @@ export default {
     footerStyle: {},
     getFooterProps: emptyObj,
     filterMethod: undefined,
+    filterAll: false,
     sortMethod: undefined,
   },
 
@@ -175,10 +176,10 @@ export default {
   rowsText: 'rows',
 
   // Components
-  TableComponent: _.makeTemplateComponent('rt-table', 'table'),
-  TheadComponent: _.makeTemplateComponent('rt-thead', 'thead'),
-  TbodyComponent: _.makeTemplateComponent('rt-tbody', 'tbody'),
-  TrComponent: _.makeTemplateComponent('rt-tr', 'tr'),
+  TableComponent: _.makeTemplateComponent('rt-table', 'Table', 'table'),
+  TheadComponent: _.makeTemplateComponent('rt-thead', 'Thead', 'thead'),
+  TbodyComponent: _.makeTemplateComponent('rt-tbody', 'Tbody', 'tbody'),
+  TrComponent: _.makeTemplateComponent('rt-tr', 'Tr', 'tr'),
   ThComponent: ({ toggleSort, className, children, ...rest }) => {
     return (
       <th
@@ -192,8 +193,8 @@ export default {
       </th>
     )
   },
-  TdComponent: _.makeTemplateComponent('rt-td', 'td'),
-  TfootComponent: _.makeTemplateComponent('rt-tfoot', 'tfoot'),
+  TdComponent: _.makeTemplateComponent('rt-td', 'Td', 'td'),
+  TfootComponent: _.makeTemplateComponent('rt-tfoot', 'Tfoot', 'tfoot'),
   FilterComponent: ({ filter, onChange }) =>
     <input
       type='text'
@@ -208,16 +209,23 @@ export default {
       &bull;
     </div>,
   PivotValueComponent: ({ subRows, value }) =>
-    <span>{value} {subRows && `(${subRows.length})`}</span>,
+    <span>
+      {value} {subRows && `(${subRows.length})`}
+    </span>,
   AggregatedComponent: ({ subRows, column }) => {
     const previewValues = subRows
       .filter(d => typeof d[column.id] !== 'undefined')
       .map((row, i) =>
         <span key={i}>
-          {row[column.id]}{i < subRows.length - 1 ? ', ' : ''}
+          {row[column.id]}
+          {i < subRows.length - 1 ? ', ' : ''}
         </span>
       )
-    return <span>{previewValues}</span>
+    return (
+      <span>
+        {previewValues}
+      </span>
+    )
   },
   PivotComponent: undefined, // this is a computed default generated using
   // the ExpanderComponent and PivotValueComponent at run-time in methods.js
@@ -233,7 +241,7 @@ export default {
         {loadingText}
       </div>
     </div>,
-  NoDataComponent: _.makeTemplateComponent('rt-noData'),
-  ResizerComponent: _.makeTemplateComponent('rt-resizer'),
+  NoDataComponent: _.makeTemplateComponent('rt-noData', 'NoData'),
+  ResizerComponent: _.makeTemplateComponent('rt-resizer', 'Resizer'),
   PadRowComponent: () => <span>&nbsp;</span>,
 }

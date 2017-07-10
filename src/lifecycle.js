@@ -88,7 +88,8 @@ export default Base =>
             this.props.collapseOnSortingChange) ||
           oldState.filtered !== newResolvedState.filtered ||
           oldState.showFilters !== newResolvedState.showFilters ||
-          (!newResolvedState.frozen &&
+          (oldState.sortedData &&
+            !newResolvedState.frozen &&
             oldState.resolvedData !== newResolvedState.resolvedData &&
             this.props.collapseOnDataChange)
         ) {
@@ -103,8 +104,8 @@ export default Base =>
         newResolvedState.pages = newResolvedState.manual
           ? newResolvedState.pages
           : Math.ceil(
-              newResolvedState.sortedData.length / newResolvedState.pageSize
-            )
+            newResolvedState.sortedData.length / newResolvedState.pageSize
+          )
         newResolvedState.page = Math.max(
           newResolvedState.page >= newResolvedState.pages
             ? newResolvedState.pages - 1
