@@ -279,7 +279,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...columnHeaderProps.style,
       }
 
-      const colSpan = column.columns.length;
+      const colSpan = column.columns.length
 
       const rest = {
         ...theadGroupThProps.rest,
@@ -380,7 +380,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               '-sort-asc': sort && !sort.desc,
               '-hidden': !show,
               '-dummy': isLast,
-              'rt-header-pivot': pivotBy && pivotBy.slice(0, -1).includes(column.id)
+              'rt-header-pivot': pivotBy && pivotBy.slice(0, -1).includes(column.id),
             }
           )}
           style={styles}
@@ -499,6 +499,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       )
       return [
         <TrComponent
+          key={rowInfo.nestingPath.join('_')}
           className={classnames(
             trProps.className,
             row._viewIndex % 2 ? '-even' : '-odd'
@@ -692,7 +693,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         SubComponent &&
           !rowInfo.subRows &&
           isExpanded &&
-          SubComponent(rowInfo)
+          SubComponent(rowInfo),
       ]
     }
 
@@ -862,7 +863,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               {pagination}
             </div>
             : null}
-          <div className="rt-table-wrapper">
+          <div className='rt-table-wrapper'>
             <TableComponent
               className={classnames(
                 tableProps.className,

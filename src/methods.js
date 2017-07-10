@@ -37,8 +37,8 @@ export default Base =>
         id: '@@dummy',
         sortable: false,
         resizable: false,
-        filterable: false
-      });
+        filterable: false,
+      })
 
       columns.forEach(column => {
         if (column.columns) {
