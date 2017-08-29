@@ -116,6 +116,22 @@ $expandSize = 7px
       border:0 !important
       opacity: 0 !important
 
+    &.-fixed
+      position: absolute !important
+      left: 0
+      z-index: 1
+      background: #fff
+      box-shadow: 2px 0 5px alpha(black, .10)
+
+    &.-empty:before
+      content: ''
+      display: inline-block
+
+  .rt-thead.-header
+  .rt-thead.-headerGroups
+    .rt-th.-fixed
+      background #f0f0f0
+
   .rt-expander
     display: inline-block
     position:relative

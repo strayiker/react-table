@@ -19,6 +19,8 @@ export default {
   compactObject,
   isSortingDesc,
   normalizeComponent,
+  isPercents,
+  percentsToPx
 }
 
 function get (obj, path, def) {
@@ -192,7 +194,7 @@ function compactObject (obj) {
 }
 
 function isSortingDesc (d) {
-  return !!(d.sort === 'desc' || d.desc === true || d.asc === false)
+  return d.sort === 'desc' || d.desc === true || d.asc === false
 }
 
 function normalizeComponent (Comp, params = {}, fallback = Comp) {
@@ -201,4 +203,12 @@ function normalizeComponent (Comp, params = {}, fallback = Comp) {
       ? <Comp {...params} />
       : Comp(params)
     : fallback
+}
+
+function isPercents(value) {
+  return (typeof value === 'string' && value[value.length - 1] === '%')
+}
+
+function percentsToPx(percents, total) {
+  return (total / 100) * percents;
 }

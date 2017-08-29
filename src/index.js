@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import classnames from 'classnames'
 //
 import _ from './utils'
@@ -41,6 +42,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       currentlyResizing: false,
       skipNextSort: false,
     }
+  }
+
+  componentDidMount() {
+    const tableWrapper = ReactDOM.findDOMNode(this.tableRef);
+    this.setState({ tableTotalWidth: tableWrapper.offsetWidth })
   }
 
   render () {
@@ -89,6 +95,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       originalKey,
       indexKey,
       groupedByPivotKey,
+      // Fixed
+      fixedColumnIndex,
       // State
       loading,
       pageSize,
@@ -100,6 +108,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       pages,
       onExpandedChange,
       // Components
+      TableWrapper,
       TableComponent,
       TheadComponent,
       TbodyComponent,
@@ -126,6 +135,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       // Sorted Data
       sortedData,
       currentlyResizing,
+      tableTotalWidth,
     } = resolvedState
 
     // Pagination
@@ -178,6 +188,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       canNext,
     }
 
+    let fixedColumnWidth;
+    let fixedColumnMaxWidth;
+    let rawColumnsWidth = 0;
+    let rawColumnsMaxWidth = 0;
+    let floorColumnsWidth = 0;
+    let floorColumnsMaxWidth = 0;
+
     // Visual Components
 
     const makeColGroup = () => {
@@ -209,23 +226,71 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...colgroupColProps.style,
         ...columnColgroupColProps.style,
       }
-      const width = _.getFirstDefined(
+      let width = _.getFirstDefined(
         resizedCol.value,
         column.width,
         column.minWidth,
       )
-      const maxWidth = _.getFirstDefined(
+      let maxWidth = _.getFirstDefined(
         resizedCol.value,
         column.width,
         column.maxWidth,
       )
 
-      const isLast = i === allVisibleColumns.length - 1
+      if (tableTotalWidth) {
+        const widthIsPercents = _.isPercents(width)
+        const maxWidthIsPercents = _.isPercents(maxWidth)
+
+        const widthValue = parseInt(width, 10) || 0
+        const maxWidthValue = parseInt(width, 10) || 0
+
+        width = widthIsPercents
+          ? _.percentsToPx(widthValue, tableTotalWidth)
+          : widthValue;
+
+        maxWidth = maxWidthIsPercents
+          ? _.percentsToPx(maxWidthValue, tableTotalWidth)
+          : maxWidthValue;
+
+        rawColumnsWidth += width
+        rawColumnsMaxWidth += maxWidth
+
+        width = Math.floor(width)
+        maxWidth = Math.floor(maxWidth)
+
+        floorColumnsWidth += width;
+        floorColumnsMaxWidth += maxWidth;
+
+        const widthDiff = Math.floor(rawColumnsWidth - floorColumnsWidth)
+        const maxWidthDiff = Math.floor(rawColumnsMaxWidth - floorColumnsMaxWidth)
+
+        if (widthDiff >= 1) {
+          width += widthDiff
+          floorColumnsWidth += widthDiff
+        }
+
+        if (maxWidthDiff >= 1) {
+          maxWidth += maxWidthDiff
+          floorColumnsMaxWidth += maxWidthDiff
+        }
+
+        width = `${width}px`
+        maxWidth = `${maxWidth}px`
+      }
+
+      const isFixed = i === fixedColumnIndex
+
+      if (isFixed) {
+        fixedColumnWidth = width;
+        fixedColumnMaxWidth = maxWidth;
+      }
+
+      const isDummy = i === allVisibleColumns.length - 1
 
       return (
         <col
           key={i + '-' + column.id}
-          className={classnames('rt-colgroup-col', classes, { '-dummy': isLast })}
+          className={classnames('rt-colgroup-col', classes, { '-dummy': isDummy })}
           style={{
             ...styles,
             width: width,
@@ -287,19 +352,27 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         colSpan,
       }
 
-      const isLast = i === headerGroups.length - 1
+      const isDummy = i === headerGroups.length - 1
+      const isFixed = i === fixedColumnIndex
+
+      if (isFixed) {
+        styles.width = fixedColumnWidth;
+        styles.maxWidth = fixedColumnMaxWidth;
+      }
+
+      const content = _.normalizeComponent(column.Header, {
+        data: sortedData,
+        column: column,
+      })
 
       return (
         <ThComponent
           key={i + '-' + column.id}
-          className={classnames(classes, { '-dummy': isLast })}
+          className={classnames(classes, { '-dummy': isDummy, '-empty': !content, '-fixed': isFixed })}
           style={styles}
           {...rest}
         >
-          {_.normalizeComponent(column.Header, {
-            data: sortedData,
-            column: column,
-          })}
+          {content}
         </ThComponent>
       )
     }
@@ -366,7 +439,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         : null
 
       const isSortable = _.getFirstDefined(column.sortable, sortable, false)
-      const isLast = i === allVisibleColumns.length - 1
+      const isDummy = i === allVisibleColumns.length - 1
+      const isFixed = i === fixedColumnIndex
+
+      if (isFixed) {
+        styles.width = fixedColumnWidth;
+        styles.maxWidth = fixedColumnMaxWidth;
+      }
 
       return (
         <ThComponent
@@ -379,7 +458,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               '-sort-desc': sort && sort.desc,
               '-sort-asc': sort && !sort.desc,
               '-hidden': !show,
-              '-dummy': isLast,
+              '-dummy': isDummy,
+              '-fixed': isFixed,
               'rt-header-pivot': pivotBy && pivotBy.slice(0, -1).includes(column.id),
             }
           )}
@@ -459,10 +539,17 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         false
       )
 
+      const isFixed = i === fixedColumnIndex
+
+      if (isFixed) {
+        styles.width = fixedColumnWidth;
+        styles.maxWidth = fixedColumnMaxWidth;
+      }
+
       return (
         <ThComponent
           key={i + '-' + column.id}
-          className={classnames(classes)}
+          className={classnames(classes, { '-fixed': isFixed, '-empty': !isFilterable })}
           style={styles}
           {...rest}
         >
@@ -527,6 +614,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               ...tdProps.style,
               ...column.style,
               ...columnProps.style,
+            }
+
+            const isFixed = i2 === fixedColumnIndex
+
+            if (isFixed) {
+              styles.width = fixedColumnWidth;
+              styles.maxWidth = fixedColumnMaxWidth;
             }
 
             const cellInfo = {
@@ -673,7 +767,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   classes,
                   !show && '-hidden',
                   cellInfo.expandable && 'rt-expandable',
-                  (isBranch || isPreview) && 'rt-pivot'
+                  (isBranch || isPreview) && 'rt-pivot',
+                  isFixed && '-fixed',
+                  (isFixed && !resolvedCell) && '-empty'
                 )}
                 style={styles}
                 {...interactionProps}
@@ -863,7 +959,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               {pagination}
             </div>
             : null}
-          <div className='rt-table-wrapper'>
+          <TableWrapper ref={(c) => this.tableRef = c}>
             <TableComponent
               className={classnames(
                 tableProps.className,
@@ -886,7 +982,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               </TbodyComponent>
               {hasColumnFooter ? makeColumnFooters() : null}
             </TableComponent>
-          </div>
+          </TableWrapper>
           {showPagination && showPaginationBottom
             ? <div className='pagination-bottom'>
               {pagination}

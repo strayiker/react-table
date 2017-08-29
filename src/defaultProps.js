@@ -3,6 +3,7 @@ import classnames from 'classnames'
 //
 import _ from './utils'
 import Pagination from './pagination'
+import ReactTableWrapper from './wrapper'
 
 const emptyObj = () => ({})
 
@@ -71,6 +72,9 @@ export default {
 
   // Pivoting
   pivotBy: undefined,
+
+  // Fixed columns
+  fixedColumn: undefined,
 
   // Key Constants
   pivotValKey: '_pivotVal',
@@ -176,6 +180,7 @@ export default {
   rowsText: 'rows',
 
   // Components
+  TableWrapper: ReactTableWrapper,
   TableComponent: _.makeTemplateComponent('rt-table', 'Table', 'table'),
   TheadComponent: _.makeTemplateComponent('rt-thead', 'Thead', 'thead'),
   TbodyComponent: _.makeTemplateComponent('rt-tbody', 'Tbody', 'tbody'),

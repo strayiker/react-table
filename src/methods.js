@@ -186,6 +186,8 @@ export default Base =>
         }
       }
 
+      console.log(visibleColumns);
+
       // Build Header Groups
       const headerGroups = []
       let currentSpan = []
