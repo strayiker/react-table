@@ -44,9 +44,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
   }
 
-  componentDidMount() {
-    const tableWrapper = ReactDOM.findDOMNode(this.tableRef)
-    this.setState({ tableTotalWidth: tableWrapper.offsetWidth })
+  componentDidMount () {
+    this.setState({ tableTotalWidth: this.tableWrapper.offsetWidth })
+    console.log(this.tableWrapper.offsetWidth)
   }
 
   render () {
@@ -224,18 +224,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...columnColgroupColProps.style,
       }
 
-      let minWidth = _.getFirstDefined(
-        column.minWidth,
-        0,
-      )
-      let maxWidth = _.getFirstDefined(
-        column.maxWidth,
-        Infinity,
-      )
+      let minWidth = column.minWidth
+      let maxWidth = column.maxWidth
       let width = _.getFirstDefined(
         resizedCol.value,
         column.width,
-        minWidth
+        minWidth,
+        0
       )
 
       // calculate px
@@ -245,8 +240,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         const maxWidthIsPercents = _.isPercents(maxWidth)
 
         const widthValue = parseInt(width, 10)
-        const minWidthValue = parseInt(minWidth, 10)
-        const maxWidthValue = parseInt(maxWidth, 10)
+        const minWidthValue = minWidth && parseInt(minWidth, 10)
+        const maxWidthValue = maxWidth && parseInt(maxWidth, 10)
 
         width = widthIsPercents
           ? _.percentsToPx(widthValue, tableTotalWidth)
@@ -951,7 +946,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               {pagination}
             </div>
             : null}
-          <TableWrapper ref={(c) => this.tableRef = c}>
+          <TableWrapper wrapperRef={(c) => this.tableWrapper = c}>
             <TableComponent
               className={classnames(
                 tableProps.className,

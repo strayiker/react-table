@@ -1,10 +1,16 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 
 
 export default class ReactTableWrapper extends Component {
+  static propTypes = {
+    wrapperRef: PropTypes.func.isRequired
+  }
+
   render () {
     return (
-      <div className='rt-table-wrapper'>{this.props.children}</div>
+      <div ref={this.props.wrapperRef} className='rt-table-wrapper'>
+        {this.props.children}
+      </div>
     )
   }
 }
