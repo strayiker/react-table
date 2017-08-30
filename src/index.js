@@ -45,7 +45,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
   }
 
   componentDidMount() {
-    const tableWrapper = ReactDOM.findDOMNode(this.tableRef);
+    const tableWrapper = ReactDOM.findDOMNode(this.tableRef)
     this.setState({ tableTotalWidth: tableWrapper.offsetWidth })
   }
 
@@ -188,12 +188,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       canNext,
     }
 
-    let fixedColumnWidth;
-    let fixedColumnMaxWidth;
-    let rawColumnsWidth = 0;
-    let rawColumnsMaxWidth = 0;
-    let floorColumnsWidth = 0;
-    let floorColumnsMaxWidth = 0;
+    let fixedColumnWidth
+    let rawColumnsWidth = 0
+    let floorColumnsWidth = 0
 
     // Visual Components
 
@@ -226,63 +223,63 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...colgroupColProps.style,
         ...columnColgroupColProps.style,
       }
+
+      let minWidth = _.getFirstDefined(
+        column.minWidth,
+        0,
+      )
+      let maxWidth = _.getFirstDefined(
+        column.maxWidth,
+        Infinity,
+      )
       let width = _.getFirstDefined(
         resizedCol.value,
         column.width,
-        column.minWidth,
-      )
-      let maxWidth = _.getFirstDefined(
-        resizedCol.value,
-        column.width,
-        column.maxWidth,
+        minWidth
       )
 
+      // calculate px
       if (tableTotalWidth) {
         const widthIsPercents = _.isPercents(width)
+        const minWidthIsPercents = _.isPercents(minWidth)
         const maxWidthIsPercents = _.isPercents(maxWidth)
 
-        const widthValue = parseInt(width, 10) || 0
-        const maxWidthValue = parseInt(width, 10) || 0
+        const widthValue = parseInt(width, 10)
+        const minWidthValue = parseInt(minWidth, 10)
+        const maxWidthValue = parseInt(maxWidth, 10)
 
         width = widthIsPercents
           ? _.percentsToPx(widthValue, tableTotalWidth)
-          : widthValue;
+          : widthValue
+
+        minWidth = minWidthIsPercents
+          ? _.percentsToPx(minWidthValue, tableTotalWidth)
+          : minWidthValue
 
         maxWidth = maxWidthIsPercents
           ? _.percentsToPx(maxWidthValue, tableTotalWidth)
-          : maxWidthValue;
+          : maxWidthValue
+
+        width = _.clamp(width, minWidth, maxWidth)
 
         rawColumnsWidth += width
-        rawColumnsMaxWidth += maxWidth
-
         width = Math.floor(width)
-        maxWidth = Math.floor(maxWidth)
+        floorColumnsWidth += width
 
-        floorColumnsWidth += width;
-        floorColumnsMaxWidth += maxWidth;
+        const diff = Math.floor(rawColumnsWidth - floorColumnsWidth)
 
-        const widthDiff = Math.floor(rawColumnsWidth - floorColumnsWidth)
-        const maxWidthDiff = Math.floor(rawColumnsMaxWidth - floorColumnsMaxWidth)
-
-        if (widthDiff >= 1) {
-          width += widthDiff
-          floorColumnsWidth += widthDiff
-        }
-
-        if (maxWidthDiff >= 1) {
-          maxWidth += maxWidthDiff
-          floorColumnsMaxWidth += maxWidthDiff
+        if (diff >= 1) {
+          width += diff
+          floorColumnsWidth += diff
         }
 
         width = `${width}px`
-        maxWidth = `${maxWidth}px`
       }
 
       const isFixed = i === fixedColumnIndex
 
       if (isFixed) {
-        fixedColumnWidth = width;
-        fixedColumnMaxWidth = maxWidth;
+        fixedColumnWidth = width
       }
 
       const isDummy = i === allVisibleColumns.length - 1
@@ -294,7 +291,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           style={{
             ...styles,
             width: width,
-            maxWidth: maxWidth,
           }}
         />
       )
@@ -356,8 +352,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const isFixed = i === fixedColumnIndex
 
       if (isFixed) {
-        styles.width = fixedColumnWidth;
-        styles.maxWidth = fixedColumnMaxWidth;
+        styles.width = fixedColumnWidth
       }
 
       const content = _.normalizeComponent(column.Header, {
@@ -443,8 +438,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const isFixed = i === fixedColumnIndex
 
       if (isFixed) {
-        styles.width = fixedColumnWidth;
-        styles.maxWidth = fixedColumnMaxWidth;
+        styles.width = fixedColumnWidth
       }
 
       return (
@@ -542,8 +536,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const isFixed = i === fixedColumnIndex
 
       if (isFixed) {
-        styles.width = fixedColumnWidth;
-        styles.maxWidth = fixedColumnMaxWidth;
+        styles.width = fixedColumnWidth
       }
 
       return (
@@ -619,8 +612,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             const isFixed = i2 === fixedColumnIndex
 
             if (isFixed) {
-              styles.width = fixedColumnWidth;
-              styles.maxWidth = fixedColumnMaxWidth;
+              styles.width = fixedColumnWidth
             }
 
             const cellInfo = {
