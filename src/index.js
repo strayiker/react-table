@@ -46,7 +46,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
   componentDidMount () {
     this.setState({ tableTotalWidth: this.tableWrapper.offsetWidth })
-    console.log(this.tableWrapper.offsetWidth)
   }
 
   render () {
@@ -86,6 +85,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       sortable,
       resizable,
       filterable,
+      footerPlacement,
       // Pivoting State
       pivotIDKey,
       pivotValKey,
@@ -188,7 +188,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       canNext,
     }
 
-    let fixedColumnWidth
+    let fixedColumnWidth = 0
     let rawColumnsWidth = 0
     let floorColumnsWidth = 0
 
@@ -820,10 +820,16 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...columnProps.style,
       }
 
+      const isFixed = i === fixedColumnIndex
+
+      if (isFixed) {
+        styles.width = fixedColumnWidth
+      }
+
       return (
         <TdComponent
           key={i + '-' + column.id}
-          className={classnames(classes, !show && '-hidden')}
+          className={classnames(classes, !show && '-hidden', { '-fixed': isFixed })}
           style={styles}
           {...tdProps.rest}
         >
@@ -881,10 +887,17 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         ...columnFooterProps.style,
       }
 
+      const isFixed = i === fixedColumnIndex
+
+      if (isFixed) {
+        styles.width = fixedColumnWidth
+        console.log(styles)
+      }
+
       return (
         <TdComponent
           key={i + '-' + column.id}
-          className={classnames(classes, !show && '-hidden')}
+          className={classnames(classes, !show && '-hidden', { '-fixed': isFixed })}
           style={styles}
           {...columnProps.rest}
           {...tFootTdProps.rest}
@@ -930,8 +943,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const noDataProps = getNoDataProps(finalState, undefined, undefined, this)
     const resizerProps = getResizerProps(finalState, undefined, undefined, this)
 
+    const displayFooterTop = footerPlacement === 'top' || footerPlacement === 'both'
+    const displayFooterBottom = footerPlacement === 'bottom' || footerPlacement === 'both'
+
     const makeTable = () => {
+      const colGroup = makeColGroup();
       const pagination = makePagination()
+      const footer = hasColumnFooter ? makeColumnFooters() : null
       return (
         <div
           className={classnames('ReactTable', className, rootProps.className)}
@@ -955,10 +973,11 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               style={tableProps.style}
               {...tableProps.rest}
             >
-              {makeColGroup()}
+              {colGroup}
               {hasHeaderGroups ? makeHeaderGroups() : null}
               {makeHeaders()}
               {hasFilters ? makeFilters() : null}
+              {displayFooterTop && footer}
               <TbodyComponent
                 className={classnames(tBodyProps.className)}
                 style={tBodyProps.style}
@@ -967,7 +986,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 {pageRows.map((d, i) => makePageRow(d, i))}
                 {padRows.map(makePadRow)}
               </TbodyComponent>
-              {hasColumnFooter ? makeColumnFooters() : null}
+              {displayFooterBottom && footer}
             </TableComponent>
           </TableWrapper>
           {showPagination && showPaginationBottom

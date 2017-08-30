@@ -62,6 +62,8 @@ export default {
   // resized: [],
   // expanded: {},
 
+  footerPlacement: 'bottom',
+
   // Controlled State Callbacks
   onPageChange: undefined,
   onPageSizeChange: undefined,
@@ -74,7 +76,7 @@ export default {
   pivotBy: undefined,
 
   // Fixed columns
-  fixedColumn: undefined,
+  fixedColumnIndex: undefined,
 
   // Key Constants
   pivotValKey: '_pivotVal',
