@@ -75,8 +75,8 @@ export default {
   // Pivoting
   pivotBy: undefined,
 
-  // Fixed columns
-  fixedColumnIndex: undefined,
+  // Fixed columns count (starts with first column)
+  fixedColumnsCount: 0,
 
   // Key Constants
   pivotValKey: '_pivotVal',
