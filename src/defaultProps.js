@@ -15,6 +15,7 @@ export default {
   showPaginationTop: false,
   showPaginationBottom: true,
   showPageSizeOptions: true,
+  showSortOrder: true,
   pageSizeOptions: [5, 10, 20, 25, 50, 100],
   defaultPageSize: 20,
   showPageJump: true,

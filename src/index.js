@@ -79,6 +79,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       showPagination,
       showPaginationTop,
       showPaginationBottom,
+      showSortOrder,
       manual,
       loadingText,
       noDataText,
@@ -456,8 +457,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             'rt-resizable-header',
             {
               '-cursor-pointer': isSortable,
-              '-sort-desc': sort && sort.desc,
-              '-sort-asc': sort && !sort.desc,
+              '-sort-desc': sort && showSortOrder && sort.desc,
+              '-sort-asc': sort && showSortOrder && !sort.desc,
               '-hidden': !show,
               '-dummy': isDummy,
               '-fixed': isFixed,
