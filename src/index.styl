@@ -18,6 +18,67 @@ $expandSize = 7px
   .rt-colgroup-col
     width: 100%
 
+  .rt-sort {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 5px;
+    height: 12px;
+    width: 12px;
+  }
+  .rt-sort-desc {
+    position: relative;
+    width: 12px;
+    height: 2px;
+    background: #000;
+  }
+  .rt-sort-desc:before {
+    content: ' ';
+    display: block;
+    position: relative;
+    top: 4px;
+    width: 8px;
+    height: 2px;
+    left: 2px;
+    background: #000;
+  }
+  .rt-sort-desc:after {
+    content: ' ';
+    display: block;
+    position: relative;
+    top: 6px;
+    width: 4px;
+    height: 2px;
+    left: 4px;
+    background: #000;
+  }
+  .rt-sort-asc {
+    position: relative;
+    width: 4px;
+    height: 2px;
+    left: 4px;
+    background: #000;
+  }
+  .rt-sort-asc:before {
+    content: ' ';
+    display: block;
+    position: relative;
+    top: 4px;
+    width: 8px;
+    height: 2px;
+    left: -2px;
+    background: #000;
+  }
+  .rt-sort-asc:after {
+    content: ' ';
+    display: block;
+    position: relative;
+    top: 6px;
+    width: 12px;
+    height: 2px;
+    left: -4px;
+    background: #000;
+  }
+
   .rt-thead
     &.-headerGroups
       background: alpha(black, .03)
@@ -46,10 +107,6 @@ $expandSize = 7px
       -moz-user-select: none
       -ms-user-select: none
       user-select: none
-      &.-sort-asc
-        box-shadow:inset 0 3px 0 0 alpha(black, .6)
-      &.-sort-desc
-        box-shadow:inset 0 -3px 0 0 alpha(black, .6)
       &.-cursor-pointer
         cursor: pointer
       &:last-child

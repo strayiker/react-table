@@ -4,6 +4,7 @@ import classnames from 'classnames'
 import _ from './utils'
 import Pagination from './pagination'
 import ReactTableWrapper from './wrapper'
+import SortOrder from './sort'
 
 const emptyObj = () => ({})
 
@@ -251,5 +252,6 @@ export default {
     </div>,
   NoDataComponent: _.makeTemplateComponent('rt-noData', 'NoData'),
   ResizerComponent: _.makeTemplateComponent('rt-resizer', 'Resizer'),
+  SortOrderComponent: SortOrder,
   PadRowComponent: () => <span>&nbsp;</span>,
 }

@@ -122,6 +122,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       SubComponent,
       NoDataComponent,
       ResizerComponent,
+      SortOrderComponent,
       ExpanderComponent,
       PivotValueComponent,
       PivotComponent,
@@ -440,6 +441,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         />)
         : null
 
+      const sortOrder = sort && showSortOrder
+        ? <SortOrderComponent desc={sort.desc} />
+        : null;
+
       const isSortable = _.getFirstDefined(column.sortable, sortable, false)
       const isDummy = i === allVisibleColumns.length - 1
       const isFixed = i < fixedColumnsCount && tableTotalWidth
@@ -457,8 +462,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             'rt-resizable-header',
             {
               '-cursor-pointer': isSortable,
-              '-sort-desc': sort && showSortOrder && sort.desc,
-              '-sort-asc': sort && showSortOrder && !sort.desc,
               '-hidden': !show,
               '-dummy': isDummy,
               '-fixed': isFixed,
@@ -471,12 +474,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           }}
           {...rest}
         >
-          <div className='rt-resizable-header-content'>
+          <span className='rt-resizable-header-content'>
             {_.normalizeComponent(column.Header, {
               data: sortedData,
               column: column,
             })}
-          </div>
+          </span>
+          {sortOrder}
           {resizer}
         </ThComponent>
       )
