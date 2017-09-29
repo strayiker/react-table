@@ -238,6 +238,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
       // calculate px
       if (totalWidth) {
+        const insideWidth = totalWidth - 2 // Subtract borders
         const widthIsPercents = _.isPercents(width)
         const minWidthIsPercents = _.isPercents(minWidth)
         const maxWidthIsPercents = _.isPercents(maxWidth)
@@ -247,15 +248,15 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         const maxWidthValue = maxWidth && parseInt(maxWidth, 10)
 
         width = widthIsPercents
-          ? _.percentsToPx(widthValue, totalWidth)
+          ? _.percentsToPx(widthValue, insideWidth)
           : widthValue
 
         minWidth = minWidthIsPercents
-          ? _.percentsToPx(minWidthValue, totalWidth)
+          ? _.percentsToPx(minWidthValue, insideWidth)
           : minWidthValue
 
         maxWidth = maxWidthIsPercents
-          ? _.percentsToPx(maxWidthValue, totalWidth)
+          ? _.percentsToPx(maxWidthValue, insideWidth)
           : maxWidthValue
 
         width = _.clamp(width, minWidth, maxWidth)
