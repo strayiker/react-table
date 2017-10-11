@@ -137,7 +137,7 @@ export default {
     resizable: undefined, // use table default
     filterable: undefined, // use table default
     show: true,
-    width: '10%',
+    width: undefined,
     minWidth: undefined,
     // Cells only
     className: '',

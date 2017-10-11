@@ -294,7 +294,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           className={classnames('rt-colgroup-col', classes, { '-dummy': isDummy })}
           style={{
             ...styles,
-            width: width,
+            width: !isDummy ? width: undefined,
           }}
         />
       )
