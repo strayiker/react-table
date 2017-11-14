@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import classnames from 'classnames'
 //
 import _ from './utils'
@@ -12,7 +11,7 @@ export const ReactTableDefaults = defaultProps
 export default class ReactTable extends Methods(Lifecycle(Component)) {
   static defaultProps = defaultProps
 
-  constructor (props) {
+  constructor(props) {
     super()
 
     this.getResolvedState = this.getResolvedState.bind(this)
@@ -44,7 +43,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
   }
 
-  render () {
+  render() {
     const resolvedState = this.getResolvedState()
     const {
       children,
@@ -156,26 +155,26 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const hasFilters = filterable || allVisibleColumns.some(d => d.filterable)
 
     const recurseRowsViewIndex = (rows, path = [], index = -1) => {
-      return [
-        rows.map((row, i) => {
-          index++
-          const rowWithViewIndex = {
-            ...row,
-            _viewIndex: index,
-          }
-          const newPath = path.concat([i])
-          if (rowWithViewIndex[subRowsKey] && _.get(expanded, newPath)) {
-            ;[rowWithViewIndex[subRowsKey], index] = recurseRowsViewIndex(
-              rowWithViewIndex[subRowsKey],
-              newPath,
-              index
-            )
-          }
-          return rowWithViewIndex
-        }),
-        index,
-      ]
-    }
+        return [
+          rows.map((row, i) => {
+            index++
+            const rowWithViewIndex = {
+              ...row,
+              _viewIndex: index,
+            }
+            const newPath = path.concat([i])
+            if (rowWithViewIndex[subRowsKey] && _.get(expanded, newPath)) {
+              ;[rowWithViewIndex[subRowsKey], index] = recurseRowsViewIndex(
+                rowWithViewIndex[subRowsKey],
+                newPath,
+                index
+              )
+            }
+            return rowWithViewIndex
+          }),
+          index,
+        ]
+      }
     ;[pageRows] = recurseRowsViewIndex(pageRows)
 
     const canPrevious = page > 0
@@ -303,7 +302,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           className={classnames('rt-colgroup-col', classes, { '-dummy': isDummy })}
           style={{
             ...styles,
-            width: !isDummy ? width: undefined,
+            width: !isDummy ? width : undefined,
           }}
         />
       )
@@ -596,7 +595,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const trProps = _.splitProps(
         getTrProps(finalState, rowInfo, undefined, this)
       )
-      return [
+
+      const rows = [
         <TrComponent
           key={rowInfo.nestingPath.join('_')}
           className={classnames(
@@ -670,7 +670,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 },
                 () => {
                   onExpandedChange &&
-                    onExpandedChange(newExpanded, cellInfo.nestingPath, e)
+                  onExpandedChange(newExpanded, cellInfo.nestingPath, e)
                 }
               )
             }
@@ -725,7 +725,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               // Should this column be blank?
               isPreview =
                 pivotBy.indexOf(column.id) >
-                  pivotBy.indexOf(rowInfo.row[pivotIDKey]) && cellInfo.subRows
+                pivotBy.indexOf(rowInfo.row[pivotIDKey]) && cellInfo.subRows
               // Pivot Cell Render Override
               if (isBranch) {
                 // isPivot
@@ -792,17 +792,18 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               </TdComponent>
             )
           })}
-        </TrComponent>,
-        rowInfo.subRows &&
-          isExpanded &&
-          rowInfo.subRows.map((d, i) =>
-            makePageRow(d, i, rowInfo.nestingPath)
-          ),
-        SubComponent &&
-          !rowInfo.subRows &&
-          isExpanded &&
-          SubComponent(rowInfo),
-      ]
+        </TrComponent>
+      ];
+
+      if (rowInfo.subRows && isExpanded) {
+        rowInfo.subRows.forEach((d, i) =>
+          rows.push(...makePageRow(d, i, rowInfo.nestingPath))
+        )
+      } else if (SubComponent && !rowInfo.subRows && isExpanded) {
+        rows.push(SubComponent(rowInfo));
+      }
+
+      return rows;
     }
 
     const makePadRow = (row, i) => {
@@ -1023,9 +1024,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             </div>
             : null}
           {!pageRows.length &&
-            <NoDataComponent {...noDataProps}>
-              {_.normalizeComponent(noDataText)}
-            </NoDataComponent>}
+          <NoDataComponent {...noDataProps}>
+            {_.normalizeComponent(noDataText)}
+          </NoDataComponent>}
           <LoadingComponent
             loading={loading}
             loadingText={loadingText}
