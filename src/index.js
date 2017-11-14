@@ -137,9 +137,18 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     } = resolvedState
 
     // Pagination
-    const startRow = pageSize * page
-    const endRow = startRow + pageSize
-    let pageRows = manual ? resolvedData : sortedData.slice(startRow, endRow)
+    let pageRows = sortedData;
+    let startRow = 0;
+    let endRow = sortedData.length;
+
+    if (manual) {
+      pageRows = resolvedData;
+    } else if (pageSize > 0) {
+      startRow = pageSize * page
+      endRow = startRow + pageSize
+      pageRows = sortedData.slice(startRow, endRow)
+    }
+
     const minRows = this.getMinRows()
     const padRows = _.range(Math.max(minRows - pageRows.length, 0))
 
@@ -967,6 +976,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const colGroup = makeColGroup();
       const pagination = makePagination()
       const footer = hasColumnFooter ? makeColumnFooters() : null
+
       return (
         <div
           className={classnames('ReactTable', className, rootProps.className)}
