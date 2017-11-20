@@ -160,6 +160,7 @@ export default {
     filterMethod: undefined,
     filterAll: false,
     sortMethod: undefined,
+    displayPivotSubRows: false,
   },
 
   // Global Expander Column Defaults

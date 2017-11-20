@@ -642,6 +642,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               value: rowInfo.row[column.id],
               pivoted: column.pivoted,
               expander: column.expander,
+              displayPivotSubRows: column.displayPivotSubRows,
               resized,
               show,
               tdProps,
@@ -744,7 +745,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   cellInfo,
                   value
                 )
-              } else {
+              } else if (!cellInfo.displayPivotSubRows) {
                 resolvedCell = null
               }
             } else if (cellInfo.aggregated) {
