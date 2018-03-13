@@ -88,6 +88,7 @@ export default {
   nestingLevelKey: '_nestingLevel',
   originalKey: '_original',
   indexKey: '_index',
+  rowKeyProp: undefined,
   groupedByPivotKey: '_groupedByPivot',
 
   // Server-side Callbacks

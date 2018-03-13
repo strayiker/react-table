@@ -90,6 +90,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       aggregatedKey,
       originalKey,
       indexKey,
+      rowKeyProp,
       groupedByPivotKey,
       // Fixed
       fixedColumnsCount,
@@ -580,13 +581,15 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makePageRow = (row, i, path = []) => {
+      const original = row[originalKey];
+      const rowKey = rowKeyProp ? original[rowKeyProp] : undefined;
       const rowInfo = {
-        original: row[originalKey],
+        original,
         row: row,
         index: row[indexKey],
         viewIndex: ++rowIndex,
         level: path.length,
-        nestingPath: path.concat([i]),
+        nestingPath: path.concat([rowKey || i]),
         aggregated: row[aggregatedKey],
         groupedByPivot: row[groupedByPivotKey],
         subRows: row[subRowsKey],
