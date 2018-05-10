@@ -40,6 +40,12 @@ export default Base =>
         filterable: false,
       }]
 
+      columns.forEach(column => {
+        if (column.columns) {
+          hasHeaderGroups = true
+        }
+      })
+
       let expanderColumn = columns.find(
         col =>
           col.expander ||
